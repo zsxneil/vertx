@@ -4,6 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -41,8 +42,48 @@ public class MyFirstVerticle extends AbstractVerticle {
                 .end(Json.encodePrettily(whisky));
     }
 
+    private void deleteOne(RoutingContext context) {
+        String id = context.request().getParam("id");
+        if (id == null) {
+            context.response().setStatusCode(400).end();
+        } else {
+            Integer productId = Integer.valueOf(id);
+            products.remove(productId);
+        }
+        context.response().setStatusCode(204).end();
+    }
+
+    private void updateOne(RoutingContext context) {
+        String id = context.request().getParam("id");
+        JsonObject json = context.getBodyAsJson();
+        if (id == null || json == null) {
+            context.response().setStatusCode(400).end();
+        } else {
+            Integer productId = Integer.valueOf(id);
+            Whisky whisky = products.get(productId);
+            whisky.setName(json.getString("name"));
+            whisky.setOrigin(json.getString("origin"));
+            context.response().putHeader("content-type","application/json;charset=utf-8")
+                    .end(Json.encodePrettily(whisky));
+        }
+
+    }
+
+    private void findOne(RoutingContext context) {
+        String id = context.request().getParam("id");
+        if (id == null) {
+            context.response().setStatusCode(400).end();
+        } else {
+            Integer productId = Integer.valueOf(id);
+            Whisky whisky = products.get(productId);
+            context.response().putHeader("content-type","application/json;charset=utf-8")
+                    .end(Json.encodePrettily(whisky));
+        }
+    }
+
     @Override
     public void start(Future<Void> startFuture) throws Exception {
+
 
         this.createSomeData();
 
@@ -59,6 +100,9 @@ public class MyFirstVerticle extends AbstractVerticle {
         router.get("/api/whiskies").handler(this::getAll);
         router.route("/api/whiskies*").handler(BodyHandler.create());
         router.post("/api/whiskies").handler(this::addOne);
+        router.delete("/api/whiskies/:id").handler(this::deleteOne);
+        router.put("/api/whiskies/:id").handler(this::updateOne);
+        router.get("/api/whiskies/:id").handler(this::findOne);
         router.route("/assets/*").handler(StaticHandler.create("assets"));
 
         // Create the HTTP server and pass the "accept" method to the request handler.

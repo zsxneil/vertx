@@ -25,6 +25,7 @@
           <artifactId>vertx-web</artifactId>
           <version>3.4.1</version>
       </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
