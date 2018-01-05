@@ -1,6 +1,13 @@
 package com.my;
 
+import com.my.learn.MyFirstVerticle;
+import com.my.learn.OKHttpVerticle;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+
+import java.io.IOException;
+import java.net.ServerSocket;
 
 /**
  * Hello world!
