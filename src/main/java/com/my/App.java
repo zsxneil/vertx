@@ -20,7 +20,7 @@ public class App
 
         //int port = 8081;
         vertx = Vertx.vertx();
-        //ServerSocket serverSocket = new ServerSocket(0);
+        //ServerSocket serverSocket = new ServerSocket(0);//这会随机选择一个端口
         //port = serverSocket.getLocalPort();
         //serverSocket.close();
         //DeploymentOptions options = new DeploymentOptions().setConfig(new JsonObject().put("http.port",port));
